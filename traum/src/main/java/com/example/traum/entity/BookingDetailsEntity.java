@@ -21,8 +21,7 @@ import lombok.Setter;
 public class BookingDetailsEntity extends AbstractEntity{
 
   @Column(name = "user_id", nullable = false)
-
-  private UserDetailsEntity userId;
+  private UserDetailsEntity userDetailsEntity;
 
 
   @ManyToOne(cascade = CascadeType.ALL)
