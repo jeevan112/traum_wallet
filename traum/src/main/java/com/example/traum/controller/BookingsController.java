@@ -3,10 +3,12 @@ package com.example.traum.controller;
 import com.example.traum.entity.BookingDetailsEntity;
 import com.example.traum.entity.ListingDetailsEntity;
 import com.example.traum.entity.UserDetailsEntity;
+import com.example.traum.entity.WalletEntity;
 import com.example.traum.exception.InternalServerException;
 import com.example.traum.repo.BookingDetailsRepository;
 import com.example.traum.repo.ListingRepository;
 import com.example.traum.repo.UserRepository;
+import com.example.traum.repo.WalletRepository;
 import com.example.traum.response.BaseMessageResponse;
 import com.example.traum.response.ServiceResponse;
 import com.example.traum.response.UserAdditionResponse;
@@ -25,6 +27,9 @@ public class BookingsController {
 
   @Autowired
   private ListingRepository listingRepository;
+
+  @Autowired
+  private WalletRepository walletRepository;
   @RequestMapping(value = "/{userId}/{listingId}", method = RequestMethod.POST)
   public ServiceResponse<?> addMachine(@PathVariable("userId") long userId, @PathVariable("listingId") long listingId) {
     long bookingId;
@@ -36,6 +41,13 @@ public class BookingsController {
       bookingDetailsEntity.setListingDetailsEntity(listingDetailsEntity);
       BookingDetailsEntity response = bookingDetailsService.save(bookingDetailsEntity);
       bookingId = response.getUserId().getId();
+      WalletEntity walletEntity = walletRepository.findByUserIdAndUserType(userId, 1).get();
+      walletEntity.setPoints(walletEntity.getPoints() + 100);
+      walletRepository.save(walletEntity);
+
+      WalletEntity walletEntity1 = walletRepository.findByUserIdAndUserType(listingDetailsEntity.getUserId().getId(), 0).get();
+      walletEntity.setPoints(walletEntity1.getPoints() + 100);
+      walletRepository.save(walletEntity1);
     } catch (InternalServerException ex) {
       return new ServiceResponse<BaseMessageResponse>(
           new BaseMessageResponse(false, ex.getMessage()),
