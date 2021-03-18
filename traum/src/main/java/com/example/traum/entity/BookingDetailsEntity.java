@@ -1,7 +1,6 @@
 package com.example.traum.entity;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,10 +17,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookingDetailsEntity extends AbstractEntity{
+public class BookingDetailsEntity extends AbstractEntity {
 
-  @Column(name = "user_id", nullable = false)
-
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "user_id", referencedColumnName = "id")
   private UserDetailsEntity userId;
 
 
