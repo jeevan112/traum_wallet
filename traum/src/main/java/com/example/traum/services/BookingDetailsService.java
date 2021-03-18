@@ -1,4 +1,4 @@
-package com.example.traum.repo;
+package com.example.traum.services;
 
 public class BookingDetailsService {
 
