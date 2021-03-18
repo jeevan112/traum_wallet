@@ -24,7 +24,7 @@ public class ListingController {
   private UserService userService;
 
   @RequestMapping(value = "/", method = RequestMethod.POST)
-  public ServiceResponse<?> addMachine(
+  public ServiceResponse<?> addUser(
       @Valid @RequestBody UserAdditionRequest userAdditionRequest) {
     log.info("Received request to get expense categories");
     UserDetailsEntity userDetailsEntity;
