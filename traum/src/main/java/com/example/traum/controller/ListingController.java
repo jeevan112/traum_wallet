@@ -1,5 +1,6 @@
 package com.example.traum.controller;
 
+import com.example.traum.entity.UserDetailsEntity;
 import com.example.traum.exception.InternalServerException;
 import com.example.traum.request.UserAdditionRequest;
 import com.example.traum.response.BaseMessageResponse;
@@ -21,23 +22,22 @@ public class ListingController {
 
   @Autowired
   private UserService userService;
+
   @RequestMapping(value = "/", method = RequestMethod.POST)
   public ServiceResponse<?> addMachine(
       @Valid @RequestBody UserAdditionRequest userAdditionRequest) {
     log.info("Received request to get expense categories");
-    UserAdditionResponse userAdditionResponse;
+    UserDetailsEntity userDetailsEntity;
     try {
-      userAdditionResponse = userService.addUser(userAdditionRequest);
+      userDetailsEntity = userService.addUser(userAdditionRequest);
     } catch (InternalServerException ex) {
       log.error("MachineManagementController :add Machine - Exception occurred: {}", ex);
       return new ServiceResponse<BaseMessageResponse>(
           new BaseMessageResponse(false, ex.getMessage()),
           HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    return new ServiceResponse<UserAdditionResponse>(userAdditionResponse);
+    return new ServiceResponse<UserDetailsEntity>(userDetailsEntity);
   }
-
-
 
 
 }

@@ -10,7 +10,7 @@ public abstract class AbstractRepoService<T, U> {
   @Autowired
   protected abstract JpaRepository<T, U> getRepo();
 
-  public T createEntity(T entity) {
+  public T /**/createEntity(T entity) {
     T createdEntity;
     try {
       createdEntity = getRepo().save(entity);
