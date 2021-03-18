@@ -1,5 +1,62 @@
 package com.example.traum.controller;
 
+import com.example.traum.entity.BookingDetailsEntity;
+import com.example.traum.entity.ListingDetailsEntity;
+import com.example.traum.entity.UserDetailsEntity;
+import com.example.traum.entity.WalletEntity;
+import com.example.traum.exception.InternalServerException;
+import com.example.traum.repo.BookingDetailsRepository;
+import com.example.traum.repo.ListingRepository;
+import com.example.traum.repo.UserRepository;
+import com.example.traum.repo.WalletRepository;
+import com.example.traum.response.BaseMessageResponse;
+import com.example.traum.response.ServiceResponse;
+import com.example.traum.response.UserAdditionResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 public class BookingsController {
 
+  @Autowired
+  private BookingDetailsRepository bookingDetailsService;
+
+  @Autowired
+  private UserRepository userRepository;
+
+  @Autowired
+  private ListingRepository listingRepository;
+
+  @Autowired
+  private WalletRepository walletRepository;
+
+  @RequestMapping(value = "/{userId}/{listingId}", method = RequestMethod.POST)
+  public ServiceResponse<?> addMachine(@PathVariable("userId") long userId,
+      @PathVariable("listingId") long listingId) {
+    long bookingId;
+    try {
+      BookingDetailsEntity bookingDetailsEntity = new BookingDetailsEntity();
+      UserDetailsEntity userDetailsEntity = userRepository.findById(userId).get();
+      bookingDetailsEntity.setUserId(userDetailsEntity);
+      ListingDetailsEntity listingDetailsEntity = listingRepository.findById(listingId).get();
+      bookingDetailsEntity.setListingDetailsEntity(listingDetailsEntity);
+      BookingDetailsEntity response = bookingDetailsService.save(bookingDetailsEntity);
+      bookingId = response.getUserId().getId();
+      WalletEntity walletEntity = walletRepository.findByUserIdAndUserType(userId, 1).get();
+      walletEntity.setPoints(walletEntity.getPoints() + 100);
+      walletRepository.save(walletEntity);
+
+      WalletEntity walletEntity1 = walletRepository
+          .findByUserIdAndUserType(listingDetailsEntity.getUserDetailsEntity().getId(), 0).get();
+      walletEntity.setPoints(walletEntity1.getPoints() + 100);
+      walletRepository.save(walletEntity1);
+    } catch (InternalServerException ex) {
+      return new ServiceResponse<BaseMessageResponse>(
+          new BaseMessageResponse(false, ex.getMessage()),
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return new ServiceResponse<Long>(bookingId);
+  }
 }

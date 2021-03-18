@@ -1,7 +1,10 @@
 package com.example.traum.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,8 +20,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ListingDetailsEntity extends AbstractEntity {
 
-  @JsonProperty("user_id")
-  private UserDetailsEntity userId;
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "user_id", referencedColumnName = "id")
+  private UserDetailsEntity userDetailsEntity;
 
 
 }

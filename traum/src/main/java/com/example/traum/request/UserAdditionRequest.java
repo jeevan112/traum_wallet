@@ -1,7 +1,9 @@
 package com.example.traum.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
+@Data
 public class UserAdditionRequest {
 
   @JsonProperty("user_name")
