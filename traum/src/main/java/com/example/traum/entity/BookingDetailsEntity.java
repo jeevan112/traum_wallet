@@ -18,6 +18,7 @@ import lombok.Setter;
 public class BookingDetailsEntity extends AbstractEntity{
 
   @Column(name = "user_id", nullable = false)
+
   private UserDetailsEntity userId;
 
   @Column(name = "listing_id", nullable = false)
