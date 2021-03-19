@@ -1,5 +1,6 @@
 package com.example.traum.controller;
 
+import com.example.traum.UserType;
 import com.example.traum.entity.BookingDetailsEntity;
 import com.example.traum.entity.ListingDetailsEntity;
 import com.example.traum.entity.UserDetailsEntity;
@@ -46,14 +47,15 @@ public class BookingsController {
       ListingDetailsEntity listingDetailsEntity = listingRepository.findById(listingId).get();
       bookingDetailsEntity.setListingDetailsEntity(listingDetailsEntity);
       BookingDetailsEntity response = bookingDetailsService.save(bookingDetailsEntity);
-      bookingId = response.getUserDetailsEntity().getId();
-      WalletEntity walletEntity = walletRepository.findByUserIdAndUserType(userId, 1).get();
+      bookingId = response.getId();
+      WalletEntity walletEntity = walletRepository.findByUserDetailsEntityAndUserType(userDetailsEntity,
+          UserType.GUEST).get();
       walletEntity.setPoints(walletEntity.getPoints() + 100);
       walletRepository.save(walletEntity);
 
       WalletEntity walletEntity1 = walletRepository
-          .findByUserIdAndUserType(listingDetailsEntity.getUserDetailsEntity().getId(), 0).get();
-      walletEntity.setPoints(walletEntity1.getPoints() + 100);
+          .findByUserDetailsEntityAndUserType(listingDetailsEntity.getUserDetailsEntity(), UserType.CUSTOMER).get();
+      walletEntity1.setPoints(walletEntity1.getPoints() + 100);
       walletRepository.save(walletEntity1);
     } catch (InternalServerException ex) {
       return new ServiceResponse<BaseMessageResponse>(
