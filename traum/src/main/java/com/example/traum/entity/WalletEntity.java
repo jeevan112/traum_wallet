@@ -22,7 +22,7 @@ public class WalletEntity extends AbstractEntity<Long> {
 
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "user_id", referencedColumnName = "id")
-  private UserDetailsEntity userId;
+  private UserDetailsEntity userDetailsEntity;
 
   @Column(name = "user_type", nullable = false)
   private UserType userType;
